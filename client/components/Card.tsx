@@ -1,4 +1,5 @@
 import { SUBJECT_COLOR_VAR, Subject, WorkType } from "@/constants/subjects";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Gallery from "@/components/Gallery";
 
@@ -36,7 +37,7 @@ export function WorkCard({
   const first = item.files?.[0];
   const isPdf = first?.mimeType?.includes("pdf");
   const subjectVar = SUBJECT_COLOR_VAR[item.subject];
-  const [open, setOpen] = (useState as any)<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="group rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
