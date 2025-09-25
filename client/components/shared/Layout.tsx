@@ -23,7 +23,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
-      <header className="sticky top-0 z-40 backdrop-blur bg-white/80 border-b">
+      <header className="sticky top-0 z-40 backdrop-blur bg-gradient-to-r from-slate-50 to-white/90 border-b">
         <div className="max-w-6xl mx-auto px-4">
           <div className="h-16 flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
@@ -54,10 +54,10 @@ export default function Layout({ children }: PropsWithChildren) {
           </div>
         )}
       </header>
-      <main className="flex-1">
+      <main className="flex-1 bg-slate-50/50">
         <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">{children}</div>
       </main>
-      <footer className="border-t bg-white">
+      <footer className="border-t bg-white/90">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-600">
           Created by Vaibhav, Class 8, KV ITBP Second Shift, Dehradun
         </div>
