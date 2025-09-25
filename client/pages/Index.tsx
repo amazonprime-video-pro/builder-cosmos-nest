@@ -2,60 +2,66 @@ import { DemoResponse } from "@shared/api";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-  const [exampleFromServer, setExampleFromServer] = useState("");
-  // Fetch users on component mount
-  useEffect(() => {
-    fetchDemo();
-  }, []);
+  const navigateTo = (path: string) => {
+    window.location.assign(path);
+  };
 
-  // Example of how to fetch data from the server (if needed)
-  const fetchDemo = async () => {
-    try {
-      const response = await fetch("/api/demo");
-      const data = (await response.json()) as DemoResponse;
-      setExampleFromServer(data.message);
-    } catch (error) {
-      console.error("Error fetching hello:", error);
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const key = String(formData.get("key") || "").trim();
+    if (key === "LEARNER8") {
+      localStorage.setItem("kv8-role", "student");
+      navigateTo("/student");
+      return;
     }
+    if (key === "EDUCATOR8") {
+      localStorage.setItem("kv8-role", "teacher");
+      navigateTo("/teacher");
+      return;
+    }
+    alert("Invalid key. Use LEARNER8 or EDUCATOR8.");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-      <div className="text-center">
-        {/* TODO: FUSION_GENERATION_APP_PLACEHOLDER replace everything here with the actual app! */}
-        <h1 className="text-2xl font-semibold text-slate-800 flex items-center justify-center gap-3">
-          <svg
-            className="animate-spin h-8 w-8 text-slate-400"
-            viewBox="0 0 50 50"
+    <div className="min-h-screen bg-[hsl(var(--background))]">
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+            KV ITBP Class 8 Homework & Classwork Portal
+          </h1>
+          <p className="text-slate-600">Secure role-based access for students and teachers</p>
+        </div>
+        <div className="mt-8 sm:mt-12 grid place-items-center">
+          <form
+            onSubmit={handleLogin}
+            className="w-full max-w-md bg-white border rounded-2xl shadow-lg p-6 sm:p-8 space-y-5"
           >
-            <circle
-              className="opacity-30"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-            />
-            <circle
-              className="text-slate-600"
-              cx="25"
-              cy="25"
-              r="20"
-              stroke="currentColor"
-              strokeWidth="5"
-              fill="none"
-              strokeDasharray="100"
-              strokeDashoffset="75"
-            />
-          </svg>
-          Generating your app...
-        </h1>
-        <p className="mt-4 text-slate-600 max-w-md">
-          Watch the chat on the left for updates that might need your attention
-          to finish generating
-        </p>
-        <p className="mt-4 hidden max-w-md">{exampleFromServer}</p>
+            <div className="space-y-1">
+              <label htmlFor="key" className="text-sm font-medium text-slate-700">
+                Enter Login Key
+              </label>
+              <input
+                id="key"
+                name="key"
+                type="password"
+                placeholder="LEARNER8 or EDUCATOR8"
+                className="w-full h-12 rounded-lg border px-4 text-base outline-none focus:ring-2 focus:ring-slate-300"
+                autoComplete="off"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full h-12 rounded-lg bg-slate-900 text-white text-base font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+            >
+              Login
+            </button>
+            <div className="text-xs text-slate-500 text-center">
+              Student Key: LEARNER8 • Teacher Key: EDUCATOR8
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

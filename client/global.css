@@ -43,20 +43,25 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Subject color tokens (HSL) */
+    --subject-math: 142 71% 36%;           /* Green */
+    --subject-science: 217 91% 60%;        /* Blue */
+    --subject-hindi: 28 95% 52%;           /* Orange */
+    --subject-english: 0 84% 60%;          /* Red */
+    --subject-social: 271 91% 65%;         /* Purple */
+    --subject-sanskrit: 50 100% 50%;       /* Yellow */
+    --subject-art: 199 89% 70%;            /* Light Blue */
+    --subject-vocation: 142 55% 55%;       /* Light Green */
+    --subject-digital: 220 9% 46%;         /* Gray */
+    --subject-sports: 174 62% 45%;         /* Turquoise */
   }
 
   .dark {
@@ -87,6 +92,7 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -104,6 +110,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
   }
 }
