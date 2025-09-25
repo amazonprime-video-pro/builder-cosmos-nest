@@ -45,7 +45,7 @@ export function WorkCard({
         style={{ backgroundColor: `hsl(${subjectVar})` }}
       />
       <div className="p-4 flex gap-4">
-        <div className="h-16 w-16 flex-shrink-0 rounded-md bg-slate-100 overflow-hidden flex items-center justify-center">
+        <button onClick={() => item.files?.length && setOpen(true)} className="h-16 w-16 flex-shrink-0 rounded-md bg-slate-100 overflow-hidden flex items-center justify-center focus:outline-none">
           {first?.url ? (
             isPdf ? (
               <div className="text-red-600 text-xs font-semibold">PDF</div>
@@ -55,7 +55,7 @@ export function WorkCard({
           ) : (
             <div className="text-slate-400 text-xs">No File</div>
           )}
-        </div>
+        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
