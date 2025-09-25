@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import type { WorkFile } from "@/components/Card";
+
+export interface WorkFile { name: string; url: string; mimeType: string }
 
 export default function Gallery({ files, onClose, initialIndex = 0 }: { files: WorkFile[]; onClose: () => void; initialIndex?: number }) {
   const [index, setIndex] = useState(initialIndex);
