@@ -67,7 +67,7 @@ export function WorkCard({
               </span>
               <span className="text-xs text-slate-500">{item.type}</span>
             </div>
-            <div className="text-xs text-slate-500 tabular-nums">{item.date}</div>
+            <div className="text-xs text-slate-500 tabular-nums whitespace-nowrap flex-shrink-0">{item.date}</div>
           </div>
           {item.description && (
             <p className="mt-1 text-sm text-slate-700 line-clamp-2">{item.description}</p>
