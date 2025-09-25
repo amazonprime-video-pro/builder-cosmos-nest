@@ -57,9 +57,6 @@ export default function Index() {
             >
               Login
             </button>
-            <div className="text-xs text-slate-500 text-center">
-              Student Key: LEARNER8 • Teacher Key: EDUCATOR8
-            </div>
           </form>
         </div>
       </div>
