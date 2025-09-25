@@ -7,7 +7,7 @@ export interface UploadPayload {
   type: WorkType;
   date: string; // YYYY-MM-DD
   description?: string;
-  file?: File | null;
+  files?: File[];
 }
 
 export default function UploadForm({ onSubmit }: { onSubmit: (p: UploadPayload) => void }) {
@@ -16,16 +16,16 @@ export default function UploadForm({ onSubmit }: { onSubmit: (p: UploadPayload) 
     type: "Homework",
     date: new Date().toISOString().slice(0, 10),
     description: "",
-    file: null,
+    files: [],
   });
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] || null;
-    if (f && !/(image\/(jpg|jpeg|png)|application\/pdf)/i.test(f.type)) {
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const valid = files.filter((f) => /(image\/(jpg|jpeg|png)|application\/pdf)/i.test(f.type));
+    if (valid.length !== files.length) {
       alert("Only JPG, JPEG, PNG, or PDF allowed");
-      return;
     }
-    setForm((s) => ({ ...s, file: f }));
+    setForm((s) => ({ ...s, files: valid }));
   };
 
   return (
@@ -72,11 +72,12 @@ export default function UploadForm({ onSubmit }: { onSubmit: (p: UploadPayload) 
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          <span className="text-slate-600">File</span>
+          <span className="text-slate-600">Files</span>
           <input
+            multiple
             type="file"
             accept=".jpg,.jpeg,.png,.pdf,image/*,application/pdf"
-            onChange={handleFile}
+            onChange={handleFiles}
             className="h-10 rounded-md border px-3 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-slate-900 file:text-white"
           />
         </label>
