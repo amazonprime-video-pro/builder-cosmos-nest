@@ -34,7 +34,8 @@ export function WorkCard({
   isTeacher?: boolean;
   isStudent?: boolean;
 }) {
-  const first = item.files?.[0];
+  const files = item.files ?? ((item as any).file ? [((item as any).file as any)] : []);
+  const first = files[0];
   const isPdf = first?.mimeType?.includes("pdf");
   const subjectVar = SUBJECT_COLOR_VAR[item.subject];
   const [open, setOpen] = useState(false);
@@ -68,15 +69,15 @@ export function WorkCard({
               </span>
               <span className="text-xs text-slate-500">{item.type}</span>
             </div>
-            <div className="text-xs text-slate-500 tabular-nums whitespace-nowrap flex-shrink-0">{item.date}</div>
+            <div className="text-xs text-slate-600 tabular-nums whitespace-nowrap flex-shrink-0">{item.date}</div>
           </div>
           {item.description && (
             <p className="mt-1 text-sm text-slate-700 line-clamp-2">{item.description}</p>
           )}
           <div className="mt-3 flex items-center gap-2">
-            {item.files?.length ? (
+            {files.length ? (
               <div className="flex flex-wrap gap-2">
-                {item.files.map((f, idx) => {
+                {files.map((f, idx) => {
                   const pdf = f.mimeType.includes("pdf");
                   return (
                     <a
@@ -87,7 +88,7 @@ export function WorkCard({
                       rel="noreferrer"
                       className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800"
                     >
-                      {pdf ? "Open PDF" : "Download"} {item.files!.length > 1 ? idx + 1 : ""}
+                      {pdf ? "Open PDF" : "Download"} {files.length > 1 ? idx + 1 : ""}
                     </a>
                   );
                 })}
@@ -116,8 +117,8 @@ export function WorkCard({
           </div>
         </div>
       </div>
-      {open && item.files?.length ? (
-        <Gallery files={item.files} onClose={() => setOpen(false)} initialIndex={0} />
+      {open && files.length ? (
+        <Gallery files={files as any} onClose={() => setOpen(false)} initialIndex={0} />
       ) : null}
     </div>
   );
