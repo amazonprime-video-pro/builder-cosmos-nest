@@ -1,7 +1,8 @@
-import { DemoResponse } from "@shared/api";
 import Layout from "@/components/shared/Layout";
+import { useState } from "react";
 
 export default function Index() {
+  const [error, setError] = useState<string | null>(null);
   const navigateTo = (path: string) => {
     window.location.assign(path);
   };
@@ -20,7 +21,7 @@ export default function Index() {
       navigateTo("/teacher");
       return;
     }
-    alert("Invalid key. Use LEARNER8 or EDUCATOR8.");
+    setError("Invalid access key.");
   };
 
   return (
@@ -48,8 +49,10 @@ export default function Index() {
                 placeholder="Enter access key"
                 className="w-full h-12 rounded-lg border px-4 text-base outline-none focus:ring-2 focus:ring-slate-300"
                 autoComplete="off"
+                onChange={() => setError(null)}
                 required
               />
+              {error && (<p className="text-sm text-red-600 mt-1">{error}</p>)}
             </div>
             <button
               type="submit"
