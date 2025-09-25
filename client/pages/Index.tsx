@@ -1,5 +1,5 @@
 import { DemoResponse } from "@shared/api";
-import { useEffect, useState } from "react";
+import Layout from "@/components/shared/Layout";
 
 export default function Index() {
   const navigateTo = (path: string) => {
