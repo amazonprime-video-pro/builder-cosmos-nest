@@ -45,7 +45,7 @@ export default function Index() {
                 id="key"
                 name="key"
                 type="password"
-                placeholder="LEARNER8 or EDUCATOR8"
+                placeholder="Enter access key"
                 className="w-full h-12 rounded-lg border px-4 text-base outline-none focus:ring-2 focus:ring-slate-300"
                 autoComplete="off"
                 required
