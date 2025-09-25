@@ -1,5 +1,6 @@
 import { SUBJECT_COLOR_VAR, Subject, WorkType } from "@/constants/subjects";
 import { cn } from "@/lib/utils";
+import Gallery from "@/components/Gallery";
 
 export interface WorkFile {
   name: string;
