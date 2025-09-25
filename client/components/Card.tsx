@@ -39,7 +39,7 @@ export function WorkCard({
     <div className="group rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
       <div
         className="h-1 w-full"
-        style={{ backgroundColor: `hsl(${subjectVar.replace("var(", "").replace(")", "")})` }}
+        style={{ backgroundColor: `hsl(${subjectVar})` }}
       />
       <div className="p-4 flex gap-4">
         <div className="h-16 w-16 flex-shrink-0 rounded-md bg-slate-100 overflow-hidden flex items-center justify-center">
@@ -58,7 +58,7 @@ export function WorkCard({
             <div className="flex items-center gap-2 min-w-0">
               <span
                 className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold text-white"
-                style={{ backgroundColor: `hsl(${subjectVar.replace("var(", "").replace(")", "")})` }}
+                style={{ backgroundColor: `hsl(${subjectVar})` }}
               >
                 {item.subject}
               </span>
