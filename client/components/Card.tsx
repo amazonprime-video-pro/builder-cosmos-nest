@@ -36,6 +36,7 @@ export function WorkCard({
   const first = item.files?.[0];
   const isPdf = first?.mimeType?.includes("pdf");
   const subjectVar = SUBJECT_COLOR_VAR[item.subject];
+  const [open, setOpen] = (useState as any)<boolean>(false);
 
   return (
     <div className="group rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
