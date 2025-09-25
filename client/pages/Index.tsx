@@ -24,8 +24,8 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))]">
-      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+    <Layout>
+      <div className="max-w-3xl mx-auto">
         <div className="text-center space-y-2">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
             KV ITBP Class 8 Homework & Classwork Portal
@@ -63,6 +63,6 @@ export default function Index() {
           </form>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
