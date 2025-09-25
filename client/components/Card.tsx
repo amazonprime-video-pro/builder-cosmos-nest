@@ -115,6 +115,9 @@ export function WorkCard({
           </div>
         </div>
       </div>
+      {open && item.files?.length ? (
+        <Gallery files={item.files} onClose={() => setOpen(false)} initialIndex={0} />
+      ) : null}
     </div>
   );
 }
