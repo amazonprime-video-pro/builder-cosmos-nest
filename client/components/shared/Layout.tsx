@@ -34,8 +34,6 @@ export default function Layout({ children }: PropsWithChildren) {
             </Link>
             <nav className="hidden md:flex items-center gap-2">
               <NavLink to="/" label="Home" />
-              <NavLink to="/student" label="Student" />
-              <NavLink to="/teacher" label="Teacher" />
             </nav>
             <button
               className="md:hidden inline-flex items-center justify-center rounded-md h-10 w-10 hover:bg-slate-100"
@@ -52,8 +50,6 @@ export default function Layout({ children }: PropsWithChildren) {
           <div className="md:hidden border-t bg-white">
             <div className="px-4 py-3 flex flex-col gap-2">
               <NavLink to="/" label="Home" />
-              <NavLink to="/student" label="Student" />
-              <NavLink to="/teacher" label="Teacher" />
             </div>
           </div>
         )}
