@@ -26,21 +26,22 @@ export async function addItem(input: {
   type: WorkType;
   date: string;
   description?: string;
-  file?: File | null;
+  files?: File[];
 }): Promise<WorkItem> {
-  let file: WorkFile | undefined = undefined;
-  if (input.file) {
-    const dataUrl = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result));
-      reader.onerror = reject;
-      reader.readAsDataURL(input.file!);
-    });
-    file = {
-      name: input.file.name,
-      url: dataUrl,
-      mimeType: input.file.type,
-    };
+  let files: WorkFile[] | undefined = undefined;
+  if (input.files && input.files.length) {
+    files = await Promise.all(
+      input.files.map(
+        (f) =>
+          new Promise<WorkFile>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () =>
+              resolve({ name: f.name, url: String(reader.result), mimeType: f.type });
+            reader.onerror = reject;
+            reader.readAsDataURL(f);
+          }),
+      ),
+    );
   }
 
   const item: WorkItem = {
@@ -49,7 +50,7 @@ export async function addItem(input: {
     type: input.type,
     date: input.date,
     description: input.description?.trim() ? input.description : undefined,
-    file,
+    files,
     createdAt: Date.now(),
   };
 
