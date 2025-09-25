@@ -13,7 +13,7 @@ export interface WorkItem {
   type: WorkType;
   date: string; // YYYY-MM-DD
   description?: string;
-  file?: WorkFile;
+  files?: WorkFile[];
   createdAt: number;
 }
 
@@ -32,7 +32,8 @@ export function WorkCard({
   isTeacher?: boolean;
   isStudent?: boolean;
 }) {
-  const isPdf = item.file?.mimeType?.includes("pdf");
+  const first = item.files?.[0];
+  const isPdf = first?.mimeType?.includes("pdf");
   const subjectVar = SUBJECT_COLOR_VAR[item.subject];
 
   return (
@@ -43,11 +44,11 @@ export function WorkCard({
       />
       <div className="p-4 flex gap-4">
         <div className="h-16 w-16 flex-shrink-0 rounded-md bg-slate-100 overflow-hidden flex items-center justify-center">
-          {item.file?.url ? (
+          {first?.url ? (
             isPdf ? (
               <div className="text-red-600 text-xs font-semibold">PDF</div>
             ) : (
-              <img src={item.file.url} alt={item.file.name} className="h-full w-full object-cover" />
+              <img src={first.url} alt={first.name} className="h-full w-full object-cover" />
             )
           ) : (
             <div className="text-slate-400 text-xs">No File</div>
@@ -70,17 +71,25 @@ export function WorkCard({
             <p className="mt-1 text-sm text-slate-700 line-clamp-2">{item.description}</p>
           )}
           <div className="mt-3 flex items-center gap-2">
-            {item.file?.url && (
-              <a
-                href={item.file.url}
-                download={item.file.name}
-                target={isPdf ? "_blank" : undefined}
-                rel="noreferrer"
-                className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800"
-              >
-                Download
-              </a>
-            )}
+            {item.files?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {item.files.map((f, idx) => {
+                  const pdf = f.mimeType.includes("pdf");
+                  return (
+                    <a
+                      key={idx}
+                      href={f.url}
+                      download={f.name}
+                      target={pdf ? "_blank" : undefined}
+                      rel="noreferrer"
+                      className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800"
+                    >
+                      {pdf ? "Open PDF" : "Download"} {item.files!.length > 1 ? idx + 1 : ""}
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
             {isStudent && (
               <label className="inline-flex items-center gap-2 text-sm text-slate-700 cursor-pointer select-none">
                 <input
