@@ -1,5 +1,6 @@
 import { Subject, WorkType } from "@/constants/subjects";
 import type { WorkItem, WorkFile } from "@/components/Card";
+import { getSupabaseClient, isRemoteEnabled } from "@/lib/supabase";
 
 const KEY = "kv8-work-items";
 const COMPLETED_KEY = "kv8-completed-ids";
@@ -32,6 +33,22 @@ function save(items: WorkItem[]) {
 
 export function listItems(): WorkItem[] {
   return load().sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export async function listItemsAsync(): Promise<WorkItem[]> {
+  const client = getSupabaseClient();
+  if (!client) return listItems();
+  const { data, error } = await client.from("work_items").select("*").order("created_at", { ascending: false });
+  if (error) return listItems();
+  return (data || []).map((row: any) => ({
+    id: row.id,
+    subject: row.subject,
+    type: row.type,
+    date: row.date,
+    description: row.description || undefined,
+    files: row.files || [],
+    createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now(),
+  }));
 }
 
 async function readAsDataURL(file: File): Promise<string> {
@@ -97,12 +114,28 @@ export async function addItem(input: {
   const items = load();
   items.push(item);
   save(items);
+
+  const client = getSupabaseClient();
+  if (client) {
+    await client.from("work_items").insert({
+      id: item.id,
+      subject: item.subject,
+      type: item.type,
+      date: item.date,
+      description: item.description || null,
+      files: item.files || [],
+    });
+  }
   return item;
 }
 
-export function removeItem(id: string) {
+export async function removeItem(id: string) {
   const items = load().filter((x) => x.id !== id);
   save(items);
+  const client = getSupabaseClient();
+  if (client) {
+    await client.from("work_items").delete().eq("id", id);
+  }
 }
 
 export function setCompleted(id: string, completed: boolean) {
@@ -114,4 +147,24 @@ export function setCompleted(id: string, completed: boolean) {
 
 export function getCompletedSet(): Set<string> {
   return new Set<string>(JSON.parse(localStorage.getItem(COMPLETED_KEY) || "[]"));
+}
+
+export function subscribeItems(onChange: () => void): () => void {
+  const client = getSupabaseClient();
+  if (client) {
+    const channel = client
+      .channel("work_items_changes")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "work_items" }, onChange)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "work_items" }, onChange)
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "work_items" }, onChange)
+      .subscribe();
+    return () => {
+      client.removeChannel(channel);
+    };
+  }
+  const handler = (e: StorageEvent) => {
+    if (e.key === KEY) onChange();
+  };
+  window.addEventListener("storage", handler);
+  return () => window.removeEventListener("storage", handler);
 }
