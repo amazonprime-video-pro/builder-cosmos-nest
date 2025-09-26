@@ -93,7 +93,7 @@ export async function addItem(input: {
   date: string;
   description?: string;
   files?: File[];
-}): Promise<WorkItem> {
+}): Promise<{ item: WorkItem; remoteOk: boolean; error?: string }> {
   let files: WorkFile[] | undefined = undefined;
   if (input.files && input.files.length) {
     const client = getSupabaseClient();
@@ -141,9 +141,11 @@ export async function addItem(input: {
   items.push(item);
   save(items);
 
+  let remoteOk = false;
+  let error: string | undefined = undefined;
   const client = getSupabaseClient();
   if (client) {
-    await client.from("work_items").insert({
+    const { error: err } = await client.from("work_items").insert({
       id: item.id,
       subject: item.subject,
       type: item.type,
@@ -151,8 +153,10 @@ export async function addItem(input: {
       description: item.description || null,
       files: item.files || [],
     });
+    remoteOk = !err;
+    if (err) error = err.message;
   }
-  return item;
+  return { item, remoteOk, error };
 }
 
 export async function removeItem(id: string) {
