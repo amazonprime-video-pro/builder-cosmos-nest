@@ -20,9 +20,19 @@ export default function TeacherDashboard() {
   }, []);
 
   const handleUpload = async (payload: UploadPayload) => {
-    await addItem(payload);
-    toast.success("Upload added");
-    setItems(await listItemsAsync());
+    setUploading(true);
+    try {
+      const { remoteOk, error } = await addItem(payload);
+      if (!remoteOk) {
+        toast.error("Saved locally; remote sync not configured. Run Supabase setup.");
+        if (error) console.error(error);
+      } else {
+        toast.success("Uploaded and synced.");
+      }
+      setItems(await listItemsAsync());
+    } finally {
+      setUploading(false);
+    }
   };
 
   const filtered = useMemo(() => {
