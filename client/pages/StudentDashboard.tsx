@@ -1,7 +1,7 @@
 import Layout from "@/components/shared/Layout";
 import { FilterBar, Filters } from "@/components/FilterBar";
 import { WorkCard, WorkItem } from "@/components/Card";
-import { getCompletedSet, listItems, setCompleted } from "@/lib/store";
+import { getCompletedSet, listItems, listItemsAsync, setCompleted, subscribeItems } from "@/lib/store";
 import { useEffect, useMemo, useState } from "react";
 
 export default function StudentDashboard() {
@@ -10,8 +10,10 @@ export default function StudentDashboard() {
   const [completed, setCompletedState] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    setItems(listItems());
+    listItemsAsync().then(setItems);
     setCompletedState(getCompletedSet());
+    const unsub = subscribeItems(() => listItemsAsync().then(setItems));
+    return unsub;
   }, []);
 
   const filtered = useMemo(() => {
