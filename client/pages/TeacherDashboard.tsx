@@ -2,7 +2,7 @@ import Layout from "@/components/shared/Layout";
 import UploadForm, { UploadPayload } from "@/components/UploadForm";
 import { FilterBar, Filters } from "@/components/FilterBar";
 import { WorkCard, WorkItem } from "@/components/Card";
-import { addItem, listItems, removeItem } from "@/lib/store";
+import { addItem, listItems, listItemsAsync, removeItem, subscribeItems } from "@/lib/store";
 import { useEffect, useMemo, useState } from "react";
 
 export default function TeacherDashboard() {
@@ -10,12 +10,14 @@ export default function TeacherDashboard() {
   const [filters, setFilters] = useState<Filters>({ type: "All", subject: "All" });
 
   useEffect(() => {
-    setItems(listItems());
+    listItemsAsync().then(setItems);
+    const unsub = subscribeItems(() => listItemsAsync().then(setItems));
+    return unsub;
   }, []);
 
   const handleUpload = async (payload: UploadPayload) => {
     await addItem(payload);
-    setItems(listItems());
+    setItems(await listItemsAsync());
   };
 
   const filtered = useMemo(() => {
@@ -44,7 +46,7 @@ export default function TeacherDashboard() {
           <FilterBar value={filters} onChange={setFilters} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((it) => (
-              <WorkCard key={it.id} item={it} isTeacher onDelete={(id) => { removeItem(id); setItems(listItems()); }} />
+              <WorkCard key={it.id} item={it} isTeacher onDelete={async (id) => { await removeItem(id); setItems(await listItemsAsync()); }} />
             ))}
             {filtered.length === 0 && (
               <div className="col-span-full text-center text-slate-500 py-10">No uploads yet. Use the form above to add work.</div>
