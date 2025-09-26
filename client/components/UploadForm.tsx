@@ -10,7 +10,7 @@ export interface UploadPayload {
   files?: File[];
 }
 
-export default function UploadForm({ onSubmit }: { onSubmit: (p: UploadPayload) => void }) {
+export default function UploadForm({ onSubmit, loading = false }: { onSubmit: (p: UploadPayload) => void; loading?: boolean }) {
   const [form, setForm] = useState<UploadPayload>({
     subject: "Math",
     type: "Homework",
@@ -95,9 +95,10 @@ export default function UploadForm({ onSubmit }: { onSubmit: (p: UploadPayload) 
       <div className="flex items-center justify-end">
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90"
+          disabled={loading}
+          className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Upload
+          {loading ? "Uploading..." : "Upload"}
         </button>
       </div>
     </form>
