@@ -43,7 +43,7 @@ export default function TeacherDashboard() {
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Teacher Dashboard</h1>
           <p className="text-slate-600">Upload and manage homework and classwork. Changes are instant.</p>
         </div>
-        <UploadForm onSubmit={handleUpload} />
+        <UploadForm onSubmit={handleUpload} loading={uploading} />
         <div className="bg-white border rounded-xl p-4 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Uploaded Work</h2>
