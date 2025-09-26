@@ -26,7 +26,7 @@ export default function Index() {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto animate-[fadeIn_.4s_ease-out]">
         <div className="text-center space-y-2">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
             KV ITBP Class 8 Homework & Classwork Portal
