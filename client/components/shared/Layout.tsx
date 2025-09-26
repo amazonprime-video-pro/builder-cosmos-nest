@@ -60,7 +60,7 @@ export default function Layout({ children }: PropsWithChildren) {
       </main>
       <footer className="border-t bg-white/90">
         <div className="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-600">
-          Created by Vaibhav, Class 8, KV ITBP Second Shift, Dehradun
+          Created by <span className="text-brand-gradient font-semibold">Vaibhav</span>, Class 8, KV ITBP Second Shift, Dehradun
         </div>
       </footer>
     </div>
