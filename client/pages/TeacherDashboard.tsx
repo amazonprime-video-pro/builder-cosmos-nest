@@ -14,9 +14,13 @@ export default function TeacherDashboard() {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
+    let liveUnsub: (() => void) | undefined;
     listItemsAsync().then((d)=>{setItems(d); setLoading(false);});
-    const unsub = subscribeItems(() => listItemsAsync().then((d)=>{setItems(d);}));
-    return unsub;
+    liveUnsub = subscribeItems(() => listItemsAsync().then((d)=>{setItems(d);}));
+    const id = setInterval(() => { listItemsAsync().then(setItems); }, 5000);
+    const onVis = () => { if (document.visibilityState === 'visible') listItemsAsync().then(setItems); };
+    document.addEventListener('visibilitychange', onVis);
+    return () => { liveUnsub && liveUnsub(); clearInterval(id); document.removeEventListener('visibilitychange', onVis); };
   }, []);
 
   const handleUpload = async (payload: UploadPayload) => {
@@ -82,6 +86,7 @@ export default function TeacherDashboard() {
             )}
           </div>
         </div>
+        <p className="text-xs text-slate-500 text-center">Created by Vaibhav, Class 8, KV ITBP Second Shift, Dehradun</p>
       </div>
     </Layout>
   );

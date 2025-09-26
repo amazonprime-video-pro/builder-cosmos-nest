@@ -62,6 +62,7 @@ export default function Index() {
             </button>
           </form>
         </div>
+        <p className="mt-10 text-xs text-slate-500 text-center">Created by Vaibhav, Class 8, KV ITBP Second Shift, Dehradun</p>
       </div>
     </Layout>
   );
