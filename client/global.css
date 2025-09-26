@@ -21,8 +21,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 352 60% 35%;
+    --primary-foreground: 0 0% 100%;
+    --brand-saffron: 33 100% 50%;
+    --brand-green: 122 70% 36%;
+    --brand-maroon: 352 60% 35%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;

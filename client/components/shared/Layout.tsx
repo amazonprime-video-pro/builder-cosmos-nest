@@ -26,8 +26,8 @@ export default function Layout({ children }: PropsWithChildren) {
       <header className="sticky top-0 z-40 backdrop-blur bg-gradient-to-r from-slate-50 to-white/90 border-b">
         <div className="max-w-6xl mx-auto px-4">
           <div className="h-16 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-md bg-slate-900" />
+            <Link to="/" className="flex items-center gap-3">
+              <img src="https://cdn.builder.io/api/v1/image/assets%2Ffe5e25e2efb34dba8a63944468d2f93e%2F9eb8f43f8c99423bb23b25cc3d6784b6?format=webp&width=96" alt="KV Logo" className="h-8 w-8 rounded"/>
               <div className="text-base sm:text-lg font-bold text-slate-900">
                 KV ITBP Class 8 Portal
               </div>
@@ -53,6 +53,7 @@ export default function Layout({ children }: PropsWithChildren) {
             </div>
           </div>
         )}
+        <div className="h-1 w-full flex"><div style={{backgroundColor:"hsl(var(--brand-saffron))"}} className="flex-1"/><div style={{backgroundColor:"hsl(var(--brand-white,0 0% 100%))"}} className="w-1"/><div style={{backgroundColor:"hsl(var(--brand-green))"}} className="flex-1"/></div>
       </header>
       <main className="flex-1 bg-slate-50/50">
         <div className="max-w-6xl mx-auto px-4 py-6 sm:py-10">{children}</div>

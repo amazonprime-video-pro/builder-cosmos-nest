@@ -56,7 +56,7 @@ export default function Index() {
             </div>
             <button
               type="submit"
-              className="w-full h-12 rounded-lg bg-slate-900 text-white text-base font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+              className="w-full h-12 rounded-lg bg-primary text-primary-foreground text-base font-semibold hover:bg-primary/90 transition-colors shadow-sm"
             >
               Login
             </button>

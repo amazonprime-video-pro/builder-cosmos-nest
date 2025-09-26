@@ -74,7 +74,7 @@ export function WorkCard({
           {item.description && (
             <p className="mt-1 text-sm text-slate-700 line-clamp-2">{item.description}</p>
           )}
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
             {files.length ? (
               <div className="flex flex-wrap gap-2">
                 {files.map((f, idx) => {
