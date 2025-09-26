@@ -11,6 +11,7 @@ export default function TeacherDashboard() {
   const [items, setItems] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({ type: "All", subject: "All" });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     listItemsAsync().then((d)=>{setItems(d); setLoading(false);});
