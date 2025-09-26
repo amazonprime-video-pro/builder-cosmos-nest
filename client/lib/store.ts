@@ -83,6 +83,10 @@ async function compressImage(file: File, maxDim = 1600): Promise<string> {
   });
 }
 
+function sanitizeName(name: string) {
+  return name.replace(/[^a-zA-Z0-9._-]+/g, "_");
+}
+
 export async function addItem(input: {
   subject: Subject;
   type: WorkType;
@@ -92,13 +96,35 @@ export async function addItem(input: {
 }): Promise<WorkItem> {
   let files: WorkFile[] | undefined = undefined;
   if (input.files && input.files.length) {
-    files = await Promise.all(
-      input.files.map(async (f) => {
-        const isImage = /^image\//i.test(f.type);
-        const url = isImage ? await compressImage(f) : await readAsDataURL(f);
-        return { name: f.name, url, mimeType: f.type } as WorkFile;
-      }),
-    );
+    const client = getSupabaseClient();
+    if (client) {
+      const bucket = client.storage.from("work_uploads");
+      const ts = Date.now();
+      const [y, m, d] = [input.date.slice(0, 4), input.date.slice(5, 7), input.date.slice(8, 10)];
+      files = [];
+      for (let i = 0; i < input.files.length; i++) {
+        const f = input.files[i];
+        const path = `${y}/${m}/${d}/${sanitizeName(input.subject)}/${sanitizeName(input.type)}/${ts}_${i}_${sanitizeName(f.name)}`;
+        // Try upload original (faster). If you want compression, swap to compress then upload blob.
+        const { error } = await bucket.upload(path, f, { upsert: true, contentType: f.type });
+        if (!error) {
+          const { data } = bucket.getPublicUrl(path);
+          files.push({ name: f.name, url: data.publicUrl, mimeType: f.type });
+        } else {
+          const isImage = /^image\//i.test(f.type);
+          const url = isImage ? await compressImage(f) : await readAsDataURL(f);
+          files.push({ name: f.name, url, mimeType: f.type });
+        }
+      }
+    } else {
+      files = await Promise.all(
+        input.files.map(async (f) => {
+          const isImage = /^image\//i.test(f.type);
+          const url = isImage ? await compressImage(f) : await readAsDataURL(f);
+          return { name: f.name, url, mimeType: f.type } as WorkFile;
+        }),
+      );
+    }
   }
 
   const item: WorkItem = {
