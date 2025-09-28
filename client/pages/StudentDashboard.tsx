@@ -25,6 +25,9 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     refresh();
+    const unsubItems = subscribeItems(refresh);
+    const unsubAnn = subscribeAnnouncements(refresh);
+    return () => { unsubItems && unsubItems(); unsubAnn && unsubAnn(); };
   }, []);
 
   const filtered = useMemo(() => {
