@@ -1,7 +1,7 @@
 import Layout from "@/components/shared/Layout";
 import { FilterBar, Filters } from "@/components/FilterBar";
 import { WorkCard, WorkItem } from "@/components/Card";
-import { getCompletedSet, listItemsAsync, setCompleted, listAnnouncementsAsync, Announcement } from "@/lib/store";
+import { getCompletedSet, listItemsAsync, setCompleted, listAnnouncementsAsync, Announcement, subscribeItems, subscribeAnnouncements } from "@/lib/store";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useMemo, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
