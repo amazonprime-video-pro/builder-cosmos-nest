@@ -27,6 +27,9 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     refresh();
+    const unsubItems = subscribeItems(refresh);
+    const unsubAnn = subscribeAnnouncements(refresh);
+    return () => { unsubItems && unsubItems(); unsubAnn && unsubAnn(); };
   }, []);
 
   const handleUpload = async (payload: UploadPayload) => {
