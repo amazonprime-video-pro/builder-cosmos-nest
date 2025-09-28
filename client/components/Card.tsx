@@ -2,6 +2,7 @@ import { SUBJECT_COLOR_VAR, Subject, WorkType } from "@/constants/subjects";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Gallery from "@/components/Gallery";
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export interface WorkFile {
   name: string;
