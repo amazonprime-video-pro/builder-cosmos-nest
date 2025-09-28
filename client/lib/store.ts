@@ -218,6 +218,22 @@ export function subscribeItems(onChange: () => void): () => void {
   return () => window.removeEventListener("storage", handler);
 }
 
+export function subscribeAnnouncements(onChange: () => void): () => void {
+  const client = getSupabaseClient();
+  if (client) {
+    const channel = client
+      .channel("announcements_changes")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "announcements" }, onChange)
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "announcements" }, onChange)
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "announcements" }, onChange)
+      .subscribe();
+    return () => {
+      client.removeChannel(channel);
+    };
+  }
+  return () => {};
+}
+
 // Announcements
 export type AnnouncementType = "info" | "urgent";
 export interface Announcement {
