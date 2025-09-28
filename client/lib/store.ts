@@ -168,6 +168,25 @@ export async function removeItem(id: string) {
   }
 }
 
+export async function updateItem(id: string, patch: Partial<Omit<WorkItem, "id" | "createdAt">>) {
+  const items = load();
+  const idx = items.findIndex((x) => x.id === id);
+  if (idx >= 0) {
+    items[idx] = { ...items[idx], ...patch } as WorkItem;
+    save(items);
+  }
+  const client = getSupabaseClient();
+  if (client) {
+    const updates: any = {};
+    if (patch.subject) updates.subject = patch.subject;
+    if (patch.type) updates.type = patch.type;
+    if (patch.date) updates.date = patch.date;
+    if (typeof patch.description !== "undefined") updates.description = patch.description ?? null;
+    if (patch.files) updates.files = patch.files;
+    await client.from("work_items").update(updates).eq("id", id);
+  }
+}
+
 export function setCompleted(id: string, completed: boolean) {
   const set = new Set<string>(JSON.parse(localStorage.getItem(COMPLETED_KEY) || "[]"));
   if (completed) set.add(id);
@@ -197,4 +216,77 @@ export function subscribeItems(onChange: () => void): () => void {
   };
   window.addEventListener("storage", handler);
   return () => window.removeEventListener("storage", handler);
+}
+
+// Announcements
+export type AnnouncementType = "info" | "urgent";
+export interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  type: AnnouncementType;
+  date: string; // YYYY-MM-DD
+  createdAt: number;
+}
+
+const ANN_KEY = "kv8-announcements";
+
+function loadAnnouncements(): Announcement[] {
+  try {
+    const raw = localStorage.getItem(ANN_KEY);
+    return raw ? (JSON.parse(raw) as Announcement[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveAnnouncements(items: Announcement[]) {
+  localStorage.setItem(ANN_KEY, JSON.stringify(items));
+}
+
+export async function listAnnouncementsAsync(): Promise<Announcement[]> {
+  const client = getSupabaseClient();
+  if (!client) return loadAnnouncements().sort((a, b) => b.createdAt - a.createdAt);
+  const { data, error } = await client.from("announcements").select("*").order("created_at", { ascending: false });
+  if (error) return loadAnnouncements().sort((a, b) => b.createdAt - a.createdAt);
+  return (data || []).map((row: any) => ({
+    id: row.id,
+    title: row.title,
+    message: row.message,
+    type: (row.type as AnnouncementType) || "info",
+    date: row.date,
+    createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now(),
+  }));
+}
+
+export async function addAnnouncement(input: { title: string; message: string; type: AnnouncementType; date: string }): Promise<void> {
+  const item: Announcement = {
+    id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    title: input.title,
+    message: input.message,
+    type: input.type,
+    date: input.date,
+    createdAt: Date.now(),
+  };
+  const items = loadAnnouncements();
+  items.push(item);
+  saveAnnouncements(items);
+
+  const client = getSupabaseClient();
+  if (client) {
+    await client.from("announcements").insert({
+      id: item.id,
+      title: item.title,
+      message: item.message,
+      type: item.type,
+      date: item.date,
+    });
+  }
+}
+
+export async function removeAnnouncement(id: string) {
+  const items = loadAnnouncements().filter((x) => x.id !== id);
+  saveAnnouncements(items);
+  const client = getSupabaseClient();
+  if (client) await client.from("announcements").delete().eq("id", id);
 }
