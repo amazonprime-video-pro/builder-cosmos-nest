@@ -45,7 +45,7 @@ export function WorkCard({
   const [edit, setEdit] = useState({ subject: item.subject, type: item.type, date: item.date, description: item.description || "" });
 
   return (
-    <div className="group rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+    <div className="group rounded-xl border bg-white shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden motion-safe:transform motion-safe:hover:-translate-y-0.5">
       <div
         className="h-1 w-full"
         style={{ backgroundColor: `hsl(${subjectVar})` }}
