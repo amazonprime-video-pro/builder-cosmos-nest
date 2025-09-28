@@ -76,7 +76,7 @@ export default function StudentDashboard() {
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Student Dashboard</h1>
             <p className="text-slate-600">View daily work and download assignments. Use the checkbox to mark as completed.</p>
           </div>
-          <button onClick={refresh} className="inline-flex items-center rounded-md border px-4 py-2 text-sm hover:bg-slate-50" aria-label="Refresh">
+          <button onClick={refresh} className="inline-flex items-center rounded-md border px-4 py-2 text-sm hover:bg-slate-50 pressable" aria-label="Refresh">
             Refresh
           </button>
         </div>
