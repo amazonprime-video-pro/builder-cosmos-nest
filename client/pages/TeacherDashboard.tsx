@@ -79,7 +79,7 @@ export default function TeacherDashboard() {
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Teacher Dashboard</h1>
             <p className="text-slate-600">Upload and manage homework and classwork. Files save to Supabase public storage.</p>
           </div>
-          <button onClick={refresh} className="inline-flex items-center rounded-md border px-4 py-2 text-sm hover:bg-slate-50" aria-label="Refresh">Refresh</button>
+          <button onClick={refresh} className="inline-flex items-center rounded-md border px-4 py-2 text-sm hover:bg-slate-50 pressable" aria-label="Refresh">Refresh</button>
         </div>
 
         <UploadForm onSubmit={handleUpload} loading={uploading} />
