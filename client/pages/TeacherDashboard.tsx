@@ -102,7 +102,10 @@ export default function TeacherDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Uploaded Work</h2>
           </div>
-          <div className="bg-slate-50 border rounded-lg p-3 sticky top-20 z-10"><FilterBar value={filters} onChange={setFilters} /></div>
+          <div className="bg-slate-50 border rounded-lg p-3 sticky top-20 z-10">
+            <div className="text-xs font-semibold text-slate-700 mb-2" aria-hidden>Upload Filters</div>
+            <FilterBar value={filters} onChange={setFilters} />
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {loading && Array.from({length:6}).map((_,i)=> (
               <div key={i} className="rounded-xl border bg-white p-4 space-y-3">
