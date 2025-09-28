@@ -92,7 +92,7 @@ export function WorkCard({
                           download={f.name}
                           target={pdf ? "_blank" : undefined}
                           rel="noreferrer"
-                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800"
+                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800 transition-all shadow-sm hover:shadow pressable"
                         >
                           {pdf ? "Open PDF" : "Download"} {files.length > 1 ? idx + 1 : ""}
                         </a>
@@ -114,7 +114,7 @@ export function WorkCard({
                   <div className="ml-auto flex items-center gap-2">
                     <button
                       onClick={() => setEditing(true)}
-                      className="inline-flex items-center px-3 py-1.5 rounded-md border text-sm text-slate-700 hover:bg-slate-50"
+                      className="inline-flex items-center px-3 py-1.5 rounded-md border text-sm text-slate-700 hover:bg-slate-50 transition-colors pressable"
                     >
                       Edit
                     </button>
@@ -150,8 +150,8 @@ export function WorkCard({
               </div>
               <textarea value={edit.description} onChange={(e)=>setEdit((s)=>({ ...s, description: e.target.value }))} rows={2} className="w-full rounded-md border px-2 py-1 text-sm" placeholder="Description" />
               <div className="flex items-center gap-2 justify-end">
-                <button type="button" onClick={()=>{ setEditing(false); setEdit({ subject: item.subject, type: item.type, date: item.date, description: item.description || "" }); }} className="inline-flex items-center px-3 py-1.5 rounded-md border text-sm hover:bg-slate-50">Cancel</button>
-                <button type="submit" className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800">Save</button>
+                <button type="button" onClick={()=>{ setEditing(false); setEdit({ subject: item.subject, type: item.type, date: item.date, description: item.description || "" }); }} className="inline-flex items-center px-3 py-1.5 rounded-md border text-sm hover:bg-slate-50 pressable">Cancel</button>
+                <button type="submit" className="inline-flex items-center px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm hover:bg-slate-800 pressable">Save</button>
               </div>
             </form>
           )}
