@@ -95,7 +95,7 @@ export default function StudentDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Assignments</h2>
           </div>
-          <div className="bg-slate-50 border rounded-lg p-3 sticky top-20 z-10"><FilterBar value={filters} onChange={setFilters} /></div>
+          <div className="bg-slate-50 border rounded-lg p-3 sticky top-20 z-10"><FilterBar value={filters} onChange={setFilters} fields={["subject","type","date"]} /></div>
 
           {loading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
