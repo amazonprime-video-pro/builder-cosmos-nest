@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SUBJECTS, Subject, WorkType } from "@/constants/subjects";
-import { cn } from "@/lib/utils";
 
 export interface UploadPayload {
   subject: Subject;
@@ -96,7 +95,7 @@ export default function UploadForm({ onSubmit, loading = false }: { onSubmit: (p
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="inline-flex items-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed transition-all motion-safe:transform active:scale-95 shadow-sm hover:shadow"
         >
           {loading ? "Uploading..." : "Upload"}
         </button>
