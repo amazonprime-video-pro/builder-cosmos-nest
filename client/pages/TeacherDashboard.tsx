@@ -2,25 +2,31 @@ import Layout from "@/components/shared/Layout";
 import UploadForm, { UploadPayload } from "@/components/UploadForm";
 import { FilterBar, Filters } from "@/components/FilterBar";
 import { WorkCard, WorkItem } from "@/components/Card";
-import { addItem, listItems, listItemsAsync, removeItem, subscribeItems } from "@/lib/store";
+import { addItem, listItemsAsync, removeItem, updateItem, addAnnouncement, listAnnouncementsAsync, removeAnnouncement, Announcement } from "@/lib/store";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useMemo, useState } from "react";
+import AnnouncementForm from "@/components/AnnouncementForm";
+import { NoticeCard } from "@/components/NoticeCard";
 
 export default function TeacherDashboard() {
   const [items, setItems] = useState<WorkItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<Filters>({ type: "All", subject: "All" });
+  const [filters, setFilters] = useState<Filters>({ type: "All", subject: "All", sort: "Newest" });
   const [uploading, setUploading] = useState(false);
+  const [notices, setNotices] = useState<Announcement[]>([]);
+  const [posting, setPosting] = useState(false);
+
+  const refresh = async () => {
+    setLoading(true);
+    const [w, n] = await Promise.all([listItemsAsync(), listAnnouncementsAsync()]);
+    setItems(w);
+    setNotices(n);
+    setLoading(false);
+  };
 
   useEffect(() => {
-    let liveUnsub: (() => void) | undefined;
-    listItemsAsync().then((d)=>{setItems(d); setLoading(false);});
-    liveUnsub = subscribeItems(() => listItemsAsync().then((d)=>{setItems(d);}));
-    const id = setInterval(() => { listItemsAsync().then(setItems); }, 5000);
-    const onVis = () => { if (document.visibilityState === 'visible') listItemsAsync().then(setItems); };
-    document.addEventListener('visibilitychange', onVis);
-    return () => { liveUnsub && liveUnsub(); clearInterval(id); document.removeEventListener('visibilitychange', onVis); };
+    refresh();
   }, []);
 
   const handleUpload = async (payload: UploadPayload) => {
@@ -28,36 +34,67 @@ export default function TeacherDashboard() {
     try {
       const { remoteOk, error } = await addItem(payload);
       if (!remoteOk) {
-        toast.error("Saved locally; remote sync not configured. Run Supabase setup.");
+        toast.error("Saved locally; remote sync not configured. Set up Supabase to sync.");
         if (error) console.error(error);
       } else {
         toast.success("Uploaded and synced.");
       }
-      setItems(await listItemsAsync());
+      await refresh();
     } finally {
       setUploading(false);
     }
   };
 
   const filtered = useMemo(() => {
-    return items.filter((it) => {
+    let out = items.filter((it) => {
       if (filters.subject && filters.subject !== "All" && it.subject !== filters.subject) return false;
       if (filters.type && filters.type !== "All" && it.type !== filters.type) return false;
       if (filters.date && it.date !== filters.date) return false;
       if (filters.month && it.date.slice(5, 7) !== filters.month) return false;
       if (filters.year && it.date.slice(0, 4) !== filters.year) return false;
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        const inFiles = (it.files || []).some((f) => f.name.toLowerCase().includes(q));
+        if (!(
+          it.subject.toLowerCase().includes(q) ||
+          it.type.toLowerCase().includes(q) ||
+          (it.description || "").toLowerCase().includes(q) ||
+          inFiles
+        )) return false;
+      }
       return true;
     });
+    out.sort((a, b) => (filters.sort === "Oldest" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt));
+    return out;
   }, [items, filters]);
 
   return (
     <Layout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Teacher Dashboard</h1>
-          <p className="text-slate-600">Upload and manage homework and classwork. Changes are instant.</p>
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Teacher Dashboard</h1>
+            <p className="text-slate-600">Upload and manage homework and classwork. Files save to Supabase public storage.</p>
+          </div>
+          <button onClick={refresh} className="inline-flex items-center rounded-md border px-4 py-2 text-sm hover:bg-slate-50" aria-label="Refresh">Refresh</button>
         </div>
+
         <UploadForm onSubmit={handleUpload} loading={uploading} />
+
+        <div className="bg-white border rounded-xl p-4 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Post Notice</h2>
+          </div>
+          <AnnouncementForm onSubmit={async (p)=>{ setPosting(true); await addAnnouncement(p); setPosting(false); toast.success("Notice posted"); setNotices(await listAnnouncementsAsync()); }} loading={posting} />
+          {notices.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {notices.map((n)=> (
+                <NoticeCard key={n.id} notice={n as any} onDelete={async (id)=>{ await removeAnnouncement(id); setNotices(await listAnnouncementsAsync()); }} />
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="bg-white border rounded-xl p-4 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Uploaded Work</h2>
@@ -78,7 +115,7 @@ export default function TeacherDashboard() {
             ))}
             {!loading && filtered.map((it) => (
               <div key={it.id} className="animate-[fadeIn_.3s_ease-out]">
-                <WorkCard item={it} isTeacher onDelete={async (id) => { await removeItem(id); setItems(await listItemsAsync()); }} />
+                <WorkCard item={it} isTeacher onDelete={async (id) => { await removeItem(id); await refresh(); }} onUpdate={async (id, patch)=>{ await updateItem(id, patch); toast.success("Updated"); await refresh(); }} />
               </div>
             ))}
             {!loading && filtered.length === 0 && (
