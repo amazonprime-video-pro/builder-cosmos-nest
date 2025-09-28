@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 export type AnnouncementType = "info" | "urgent";
 
