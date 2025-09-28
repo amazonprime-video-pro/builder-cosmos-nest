@@ -1,5 +1,4 @@
 import { SUBJECTS, Subject, WorkType } from "@/constants/subjects";
-import { cn } from "@/lib/utils";
 
 export interface Filters {
   subject?: Subject | "All";
