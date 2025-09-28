@@ -23,10 +23,10 @@ export function FilterBar({ value, onChange, fields }: { value: Filters; onChang
         <select
           value={value.subject ?? "All"}
           onChange={(e) => update({ subject: e.target.value as any })}
-          className="h-10 rounded-md border px-3 text-sm"
+          className="h-10 rounded-md border px-3 text-sm w-full"
           aria-label="Filter by subject"
         >
-          <option>All</option>
+          <option value="All">Select Subject</option>
           {SUBJECTS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -38,10 +38,10 @@ export function FilterBar({ value, onChange, fields }: { value: Filters; onChang
         <select
           value={value.type ?? "All"}
           onChange={(e) => update({ type: e.target.value as any })}
-          className="h-10 rounded-md border px-3 text-sm"
+          className="h-10 rounded-md border px-3 text-sm w-full"
           aria-label="Filter by type"
         >
-          <option>All</option>
+          <option value="All">Select Work Type</option>
           <option>Homework</option>
           <option>Classwork</option>
         </select>
@@ -51,8 +51,9 @@ export function FilterBar({ value, onChange, fields }: { value: Filters; onChang
           type="date"
           value={value.date ?? ""}
           onChange={(e) => update({ date: e.target.value })}
-          className="h-10 rounded-md border px-3 text-sm"
+          className="h-10 rounded-md border px-3 text-sm w-full"
           aria-label="Filter by date"
+          placeholder="Choose By Date"
         />
       )}
       {active.includes("month") && (
