@@ -79,7 +79,25 @@ export function WorkCard({
                 <div className="text-xs text-slate-600 tabular-nums whitespace-nowrap flex-shrink-0">{item.date}</div>
               </div>
               {item.description && (
-                <p className="mt-1 text-sm text-slate-700 line-clamp-2">{item.description}</p>
+                <div className="mt-1 text-sm text-slate-700">
+                  <p className="line-clamp-2">{item.description}</p>
+                  {item.description.length > 140 && (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="text-xs text-slate-600 underline hover:text-slate-900 mt-1 pressable">Read more</button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>{item.subject} · {item.type} · {item.date}</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            <div className="whitespace-pre-wrap text-slate-800">{item.description}</div>
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <div className="flex justify-end"><AlertDialogAction>Close</AlertDialogAction></div>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </div>
               )}
               <div className="mt-3 flex items-center gap-2 flex-wrap">
                 {files.length ? (
